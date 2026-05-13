@@ -2,8 +2,8 @@
 CS 460 – Algorithms: Final Programming Assignment
 The Torchbearer
 
-Student Name: ___________________________
-Student ID:   ___________________________
+Student Name: Parleen Bagga
+Student ID:  131159493
 
 INSTRUCTIONS
 ------------
@@ -25,16 +25,17 @@ import heapq
 # =============================================================================
 
 def explain_problem():
-    """
-    Returns
-    -------
-    str
-        Your Part 1 README answers, written as a string.
-        Must match what you wrote in README Part 1.
-
-    TODO
-    """
-    return "TODO"
+     return(
+        "- A single shortest-path run from S is not enough because it only gives the cheapest "
+        "cost from the entrance to each node; it does not decide which relic should be visited "
+        "first, second, or last.\n"
+        "- After all important travel costs are known, the remaining decision is the order of "
+        "visiting the relic chambers before going to the exit.\n"
+        "- This requires a search over orders because different relic orders can produce "
+        "different total fuel costs, even when each point-to-point distance is already shortest."
+         
+     )
+     
 
 
 # =============================================================================
@@ -42,60 +43,41 @@ def explain_problem():
 # =============================================================================
 
 def select_sources(spawn, relics, exit_node):
-    """
-    Parameters
-    ----------
-    spawn : node
-    relics : list[node]
-    exit_node : node
-
-    Returns
-    -------
-    list[node]
-        No duplicates. Order does not matter.
-
-    TODO
-    """
-    pass
+    sources = set()
+    sources.add(spawn)
+    for relic in relics:
+        sources.add(relic)
+    return list(sources)
 
 
 def run_dijkstra(graph, source):
-    """
-    Parameters
-    ----------
-    graph : dict[node, list[tuple[node, int]]]
-        graph[u] = [(v, cost), ...]. All costs are nonnegative integers.
-    source : node
+    dist ={}
+    for node in graph:
+        dist[node] = float('inf')
+    dist[source] = 0
+    pq = [(0, source)]
+    visited =  set()
 
-    Returns
-    -------
-    dict[node, float]
-        Minimum cost from source to every node in graph.
-        Unreachable nodes map to float('inf').
+    while pq:
+        current_dist, current_node = heapq.heappop(pq)
+        if current_node in visited:
+            continue
+        visited.add(current_node)
 
-    TODO
-    """
-    pass
+        for neighbor, cost in graph[current_node]:
+            new_dist = current_dist + cost
+            if new_dist < dist[neighbor]:
+                dist[neighbor] = new_dist
+                heapq.heappush(pq, (new_dist, neighbor))
+    return dist
 
 
 def precompute_distances(graph, spawn, relics, exit_node):
-    """
-    Parameters
-    ----------
-    graph : dict[node, list[tuple[node, int]]]
-    spawn : node
-    relics : list[node]
-    exit_node : node
-
-    Returns
-    -------
-    dict[node, dict[node, float]]
-        Nested structure supporting dist_table[u][v] lookups
-        for every source u your design requires.
-
-    TODO
-    """
-    pass
+   sources = select_sources(spawn, relics, exit_node)
+   dist_table = {}
+   for source in sources:
+       dist_table[source] = run_dijkstra(graph, source)
+   return dist_table
 
 
 # =============================================================================
@@ -281,3 +263,5 @@ def _run_tests():
 
 if __name__ == "__main__":
     _run_tests()
+
+
