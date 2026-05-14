@@ -35,8 +35,8 @@
 
 | Source Node Type | Why it is a source |
 |---|---|
-| _node type_ | _one-line reason_ |
-| _node type_ | _one-line reason_ |
+| Entrance / spawn node| The route always begins here, so shortest costs from the entrance to relics are needed. |
+| Relic chamber nodes| After collecting one relic, the planner must know the cheapest cost from that relic to every other relic and to the exit. |
 
 ### Part 2b: Distance Storage
 
@@ -44,20 +44,21 @@
 
 | Property | Your answer |
 |---|---|
-| Data structure name | |
-| What the keys represent | |
-| What the values represent | |
-| Lookup time complexity | |
-| Why O(1) lookup is possible | |
+| Data structure name | Nested dictionary `dist_table`  |
+| What the keys represent | Outer key = source node; inner key = destination node |
+| What the values represent | Shortest-path fuel cost from the source node to the destination node |
+| Lookup time complexity | O(1) average case|
+| Why O(1) lookup is possible | Python dictionaries use hash-table lookup  |
 
 ### Part 2c: Precomputation Complexity
 
 > State the total complexity and show the arithmetic. Two to three lines max.
 
-- **Number of Dijkstra runs:** _your answer_
-- **Cost per run:** _your answer_
-- **Total complexity:** _your answer_
-- **Justification (one line):** _your answer_
+- **Number of Dijkstra runs:** `k + 1`
+- **Cost per run:** `O(m log n)`
+- **Total complexity:** `O((k + 1)m log n)`
+- **Justification (one line):** Dijkstra runs once from the entrance and once from each of the `k` relic chambers.
+
 
 ---
 
@@ -72,29 +73,30 @@
 > Do not copy the invariant text from the spec.
 
 - **For nodes already finalized (in S):**
-  _Your answer here._
+  Their shortest distance from the source has already been confirmed, so those distance values will not need to change later.
 
 - **For nodes not yet finalized (not in S):**
-  _Your answer here._
+  Their current distance is the best route discovered so far using finalized nodes as the completed middle portion of the path.
 
 ### Part 3b: Why Each Phase Holds
 
 > One to two bullets per phase. Maintenance must mention nonnegative edge weights.
 
 - **Initialization : why the invariant holds before iteration 1:**
-  _Your answer here._
+  At the beginning, the source has distance `0` and all other nodes have distance `infinity`, so no incorrect shortest-path claim has been made.
 
 - **Maintenance : why finalizing the min-dist node is always correct:**
-  _Your answer here._
+  The node with the smallest tentative distance is safe to finalize because all edge weights are nonnegative. Any later route through another unfinished node cannot become cheaper than the smallest current tentative distance.
+
 
 - **Termination : what the invariant guarantees when the algorithm ends:**
-  _Your answer here._
+  When the priority queue is empty, every reachable node has its true shortest-path distance from the source, and unreachable nodes remain at `infinity`.
 
 ### Part 3c: Why This Matters for the Route Planner
 
 > One sentence connecting correct distances to correct routing decisions.
 
-_Your answer here._
+Correct shortest-path distances are necessary because the route planner compares relic visit orders using these costs, so incorrect distances could make it choose the wrong route.
 
 ---
 
@@ -105,17 +107,17 @@ _Your answer here._
 > State the failure mode. Then give a concrete counter-example using specific node names
 > or costs (you may use the illustration example from the spec). Three to five bullets.
 
-- **The failure mode:** _Your answer here._
-- **Counter-example setup:** _Your answer here._
-- **What greedy picks:** _Your answer here._
-- **What optimal picks:** _Your answer here._
-- **Why greedy loses:** _Your answer here._
+- **The failure mode:** Greedy chooses the cheapest next relic immediately, but that local choice may make the remaining route more expensive.
+- **Counter-example setup:** In the example, `S -> B` costs `1`, `S -> C` costs `2`, and `S -> D` costs `2`, but the costs between relics and to `T` change the best full route.
+- **What greedy picks:** Greedy chooses `B` first because it is the cheapest relic to reach from `S`.
+- **What optimal picks:** An optimal route is `S -> B -> D -> C -> T` with total cost `4`.
+- **Why greedy loses:** Greedy only considers the next step, while the total route depends on how that step affects all later relic visits and the exit.
 
 ### What the Algorithm Must Explore
 
 > One bullet. Must use the word "order."
 
-- _Your answer here._
+- The algorithm must explore the order of visiting relics because different relic sequences can produce different total fuel costs.
 
 ---
 

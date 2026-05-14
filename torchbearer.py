@@ -43,41 +43,53 @@ def explain_problem():
 # =============================================================================
 
 def select_sources(spawn, relics, exit_node):
-    sources = set()
-    sources.add(spawn)
-    for relic in relics:
-        sources.add(relic)
-    return list(sources)
+    sources = []
 
+    if spawn not in sources:
+        sources.append(spawn)
+
+    for relic in relics:
+        if relic not in sources:
+            sources.append(relic)
+
+    return sources
 
 def run_dijkstra(graph, source):
-    dist ={}
+    dist = {}
+
     for node in graph:
         dist[node] = float('inf')
+        for neighbor, cost in graph[node]:
+            if neighbor not in dist:
+                dist[neighbor] = float('inf')
+
     dist[source] = 0
     pq = [(0, source)]
-    visited =  set()
 
     while pq:
         current_dist, current_node = heapq.heappop(pq)
-        if current_node in visited:
-            continue
-        visited.add(current_node)
 
-        for neighbor, cost in graph[current_node]:
+        if current_dist > dist[current_node]:
+            continue
+
+        for neighbor, cost in graph.get(current_node, []):
             new_dist = current_dist + cost
+
             if new_dist < dist[neighbor]:
                 dist[neighbor] = new_dist
                 heapq.heappush(pq, (new_dist, neighbor))
+
     return dist
 
 
 def precompute_distances(graph, spawn, relics, exit_node):
-   sources = select_sources(spawn, relics, exit_node)
-   dist_table = {}
-   for source in sources:
-       dist_table[source] = run_dijkstra(graph, source)
-   return dist_table
+    sources = select_sources(spawn, relics, exit_node)
+    dist_table = {}
+
+    for source in sources:
+        dist_table[source] = run_dijkstra(graph, source)
+
+    return dist_table
 
 
 # =============================================================================
@@ -85,16 +97,19 @@ def precompute_distances(graph, spawn, relics, exit_node):
 # =============================================================================
 
 def dijkstra_invariant_check():
-    """
-    Returns
-    -------
-    str
-        Your Part 3 README answers, written as a string.
-        Must match what you wrote in README Part 3.
+   return """
+Part 3a: Invariant Explanation
+- For finalized nodes, the algorithm has already proven their shortest distance from the source, so those values will not change later.
+- For non-finalized nodes, dist stores the best path found so far using only finalized nodes as internal steps.
 
-    TODO
-    """
-    return "TODO"
+Part 3b: Invariant Maintenance
+- Initialization: Before the first loop, the source has distance 0 and every other node is infinity, so no incorrect shortest paths have been claimed.
+- Maintenance: The node with the smallest tentative distance can be finalized because all edge weights are nonnegative, so no later path through another unfinished node can become cheaper.
+- Termination: When the algorithm finishes, every reachable node has its true shortest-path distance, and unreachable nodes remain infinity.
+
+Part 3c: Why Correctness Matters
+- The route planner depends on these distances to compare relic orders, so incorrect shortest-path values could cause it to choose the wrong route.
+     """
 
 
 # =============================================================================
@@ -102,16 +117,17 @@ def dijkstra_invariant_check():
 # =============================================================================
 
 def explain_search():
-    """
-    Returns
-    -------
-    str
-        Your Part 4 README answers, written as a string.
-        Must match what you wrote in README Part 4.
+   return """
+Why Greedy Fails
+- The failure mode: Greedy chooses the cheapest next relic immediately, but that local choice may make the remaining route more expensive.
+- Counter-example setup: In the example, S to B costs 1, S to C costs 2, and S to D costs 2, but the costs between relics and to T change the best full route.
+- What greedy picks: Greedy chooses B first because it is the cheapest relic to reach from S.
+- What optimal picks: An optimal route is S -> B -> D -> C -> T with total cost 4.
+- Why greedy loses: Greedy only considers the next step, while the total route depends on how that step affects all later relic visits and the exit.
 
-    TODO
-    """
-    return "TODO"
+What the Algorithm Must Explore
+- The algorithm must explore the order of visiting relics because different relic sequences can produce different total fuel costs.
+"""
 
 
 # =============================================================================
