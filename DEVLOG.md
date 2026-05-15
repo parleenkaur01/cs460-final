@@ -18,7 +18,7 @@ Once Dijkstra was working correctly, I moved on to Part 2 and implemented source
 
 ---
 
-## Entry 3 – [5/1/2026]: Correctness and Search Design
+## Entry 3 – [5/13/2026]: Correctness and Search Design
 I completed the Dijkstra correctness explanation for Part 3 by understanding the invariant, why nonnegative edge weights matter, and how the algorithm guarantees correct shortest-path distances. I also worked on Part 4 and analyzed why a greedy approach fails for this problem. I realized that choosing the closest relic first does not always lead to the optimal total route, which confirmed the need to explore all possible orders. I then began planning the backtracking approach by identifying the current location, visited relics, and total cost as the key components of the search state.
 
 ---
