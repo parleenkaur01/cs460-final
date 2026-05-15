@@ -142,9 +142,8 @@ The algorithm must explore the order of visiting relics because the total fuel c
 
 ### Part 6c: Pruning Correctness
 
-> One to two bullets. Explain why pruning is safe.
 
--A branch is pruned only if its lower bound is already at least the best complete route found so far.
+- A branch is pruned only if its lower bound is already at least the best complete route found so far.
 - Because the lower bound never overestimates the remaining route cost, pruning cannot remove the true optimal solution.
 
 
