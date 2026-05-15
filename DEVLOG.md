@@ -12,8 +12,8 @@
 
 ## Entry 1 – [05/11/2026]: Initial Plan
 
-
 I plan to begin by understanding the problem structure and separating it into two main parts: computing shortest paths and searching over relic visit orders. I will first implement Dijkstra’s algorithm and use it to precompute distances between the spawn, all relics, and the exit. After that, I will implement a recursive backtracking approach to explore all possible orders of visiting relics, while using pruning to reduce unnecessary exploration. I expect the most difficult part will be designing correct pruning logic without eliminating the optimal solution. I will test my implementation using the provided test cases and by creating small custom graphs to verify correctness step by step.
+
 ---
 
 ## Entry 2 – [05/12/2026]: Implemented Dijkstra & PreComputation
