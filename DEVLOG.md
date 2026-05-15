@@ -2,12 +2,6 @@
 
 **Student Name:** PARLEEN BAGGA
 **Student ID:** 131159493
-
-> Instructions: Write at least four dated entries. Required entry types are marked below.
-> Two to five sentences per entry is sufficient. Write entries as you go, not all in one
-> sitting. Graders check that entries reflect genuine work across multiple sessions.
-> Delete all blockquotes before submitting.
-
 ---
 
 ## Entry 1 – [05/11/2026]: Initial Plan
