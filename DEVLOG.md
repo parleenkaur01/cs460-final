@@ -29,27 +29,21 @@ I completed the Dijkstra correctness explanation for Part 3 by understanding the
 
 ---
 
-## Entry 4 – [Date]: Post-Implementation Reflection
+## Entry 4 – 05/14 : Post-Implementation Reflection
 
-> Required. Written after your implementation is complete. Describe what you would
-> change or improve given more time.
+After completing the project, I better understood how shortest-path algorithms and recursive search techniques can be combined to solve optimization problems. The most challenging part was designing pruning logic that improves efficiency without removing the optimal solution. If I had more time, I would improve the lower-bound estimation to make pruning more aggressive and reduce unnecessary recursive calls. I would also add more custom test cases for larger graphs and edge cases involving unreachable relics or exits.
 
-_Your entry here._
+## Final Entry – 05/14: Time Estimate
 
----
-
-## Final Entry – [Date]: Time Estimate
-
-> Required. Estimate minutes spent per part. Honesty is expected; accuracy is not graded.
 
 | Part | Estimated Hours |
 |---|---|
-| Part 1: Problem Analysis | |
-| Part 2: Precomputation Design | |
-| Part 3: Algorithm Correctness | |
-| Part 4: Search Design | |
-| Part 5: State and Search Space | |
-| Part 6: Pruning | |
-| Part 7: Implementation | |
-| README and DEVLOG writing | |
-| **Total** | |
+| Part 1: Problem Analysis |1 |
+| Part 2: Precomputation Design |2 |
+| Part 3: Algorithm Correctness | 1.5|
+| Part 4: Search Design | 1|
+| Part 5: State and Search Space |2 |
+| Part 6: Pruning |1.5 |
+| Part 7: Implementation |4 |
+| README and DEVLOG writing |1.5 |
+| **Total** | 14.5|
