@@ -84,7 +84,7 @@ Correct shortest-path distances are necessary because the route planner compares
 
 
 - **The failure mode:** Greedy chooses the cheapest immediate next relic, but that local decision may lead to a more expensive complete route.
-- **Counter-example setup:** Suppose `S -> B = 1`, `S -> C = 2`, `B -> D = 100`, `C -> D = 1`, `D -> T = 1`, and `B -> T = 50`.
+- **Counter-example setup:** Suppose `S -> B = 1`, `S -> C = 2`, `B -> D = 100`, `C -> D = 1`, `D -> B = 1`, `D -> T = 1`, and `B -> T = 50`.
 - **What greedy picks:** Greedy chooses `B` first because `S -> B = 1` is cheaper than `S -> C = 2`.
 - **What optimal picks:** The better route is `S -> C -> D -> B -> T` because the paths after `C` are much cheaper overall
 - **Why greedy loses:** Starting with `B` saves only `1` unit initially, but later forces the algorithm to use the very expensive edge `B -> D = 100`. Starting with `C` costs slightly more at first but avoids that expensive path, giving a lower total route cost.
@@ -143,8 +143,8 @@ The algorithm must explore the order of visiting relics because the total fuel c
 ### Part 6c: Pruning Correctness
 
 
-- A branch is pruned only if its lower bound is already at least the best complete route found so far.
-- Because the lower bound never overestimates the remaining route cost, pruning cannot remove the true optimal solution.
+- A branch is pruned only when `cost_so_far` is already greater than or equal to the best complete route found so far.
+- This is safe because all edge weights are nonnegative, so continuing the branch can only keep the cost the same or increase it. Therefore, a branch that is already no better than the best complete route cannot later become the optimal solution.
 
 
 ## References

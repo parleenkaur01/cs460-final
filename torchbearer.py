@@ -119,14 +119,14 @@ Part 3c: Why Correctness Matters
 def explain_search():
    return """
 Why Greedy Fails
-- The failure mode: Greedy chooses the cheapest next relic immediately, but that local choice may make the remaining route more expensive.
-- Counter-example setup: In the example, S to B costs 1, S to C costs 2, and S to D costs 2, but the costs between relics and to T change the best full route.
-- What greedy picks: Greedy chooses B first because it is the cheapest relic to reach from S.
-- What optimal picks: An optimal route is S -> B -> D -> C -> T with total cost 4.
-- Why greedy loses: Greedy only considers the next step, while the total route depends on how that step affects all later relic visits and the exit.
+- The failure mode: Greedy chooses the cheapest immediate next relic, but that local decision may lead to a more expensive complete route.
+- Counter-example setup: Suppose S -> B = 1, S -> C = 2, B -> D = 100, C -> D = 1, D -> B = 1, D -> T = 1, and B -> T = 50.
+- What greedy picks: Greedy chooses B first because S -> B = 1 is cheaper than S -> C = 2.
+- What optimal picks: The better route is S -> C -> D -> B -> T because the paths after C are much cheaper overall.
+- Why greedy loses: Starting with B saves only 1 unit initially, but later forces the algorithm to use the very expensive edge B -> D = 100. Starting with C costs slightly more at first but avoids that expensive path, giving a lower total route cost.
 
 What the Algorithm Must Explore
-- The algorithm must explore the order of visiting relics because different relic sequences can produce different total fuel costs.
+- The algorithm must explore the order of visiting relics because the total fuel cost depends on the sequence in which relic chambers are visited.
 """
 
 
