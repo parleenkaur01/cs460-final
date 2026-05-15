@@ -1,20 +1,11 @@
 # The Torchbearer
 
-**Student Name:** ___________________________
-**Student ID:** ___________________________
+**Student Name:** Parleen Bagga
+**Student ID:** 131159493
 **Course:** CS 460 – Algorithms | Spring 2026
-
-> This README is your project documentation. Write it the way a developer would document
-> their design decisions , bullet points, brief justifications, and concrete examples where
-> required. You are not writing an essay. You are explaining what you built and why you built
-> it that way. Delete all blockquotes like this one before submitting.
-
----
 
 ## Part 1: Problem Analysis
 
-> Document why this problem is not just a shortest-path problem. Three bullet points, one
-> per question. Each bullet should be 1-2 sentences max.
 
 - **Why a single shortest-path run from S is not enough:**
   A single shortest-path run only gives the minimum cost from the entrance to each node, but it does not determine the order in which the relics should be visited.
@@ -31,8 +22,6 @@
 
 ### Part 2a: Source Selection
 
-> List the source node types as a bullet list. For each, one-line reason.
-
 | Source Node Type | Why it is a source |
 |---|---|
 | Entrance / spawn node| The route always begins here, so shortest costs from the entrance to relics are needed. |
@@ -40,7 +29,6 @@
 
 ### Part 2b: Distance Storage
 
-> Fill in the table. No prose required.
 
 | Property | Your answer |
 |---|---|
@@ -52,8 +40,6 @@
 
 ### Part 2c: Precomputation Complexity
 
-> State the total complexity and show the arithmetic. Two to three lines max.
-
 - **Number of Dijkstra runs:** `k + 1`
 - **Cost per run:** `O(m log n)`
 - **Total complexity:** `O((k + 1)m log n)`
@@ -64,13 +50,8 @@
 
 ## Part 3: Algorithm Correctness
 
-> Document your understanding of why Dijkstra produces correct distances.
-> Bullet points and short sentences throughout. No paragraphs.
-
 ### Part 3a: What the Invariant Means
 
-> Two bullets: one for finalized nodes, one for non-finalized nodes.
-> Do not copy the invariant text from the spec.
 
 - **For nodes already finalized (in S):**
   Their shortest distance from the source has already been confirmed, so those distance values will not need to change later.
@@ -80,7 +61,6 @@
 
 ### Part 3b: Why Each Phase Holds
 
-> One to two bullets per phase. Maintenance must mention nonnegative edge weights.
 
 - **Initialization : why the invariant holds before iteration 1:**
   At the beginning, the source has distance `0` and all other nodes have distance `infinity`, so no incorrect shortest-path claim has been made.
@@ -94,8 +74,6 @@
 
 ### Part 3c: Why This Matters for the Route Planner
 
-> One sentence connecting correct distances to correct routing decisions.
-
 Correct shortest-path distances are necessary because the route planner compares relic visit orders using these costs, so incorrect distances could make it choose the wrong route.
 
 ---
@@ -104,20 +82,16 @@ Correct shortest-path distances are necessary because the route planner compares
 
 ### Why Greedy Fails
 
-> State the failure mode. Then give a concrete counter-example using specific node names
-> or costs (you may use the illustration example from the spec). Three to five bullets.
 
-- **The failure mode:** Greedy chooses the cheapest next relic immediately, but that local choice may make the remaining route more expensive.
-- **Counter-example setup:** In the example, `S -> B` costs `1`, `S -> C` costs `2`, and `S -> D` costs `2`, but the costs between relics and to `T` change the best full route.
-- **What greedy picks:** Greedy chooses `B` first because it is the cheapest relic to reach from `S`.
-- **What optimal picks:** An optimal route is `S -> B -> D -> C -> T` with total cost `4`.
-- **Why greedy loses:** Greedy only considers the next step, while the total route depends on how that step affects all later relic visits and the exit.
+- **The failure mode:** Greedy chooses the cheapest immediate next relic, but that local decision may lead to a more expensive complete route.
+- **Counter-example setup:** Suppose `S -> B = 1`, `S -> C = 2`, `B -> D = 100`, `C -> D = 1`, `D -> T = 1`, and `B -> T = 50`.
+- **What greedy picks:** Greedy chooses `B` first because `S -> B = 1` is cheaper than `S -> C = 2`.
+- **What optimal picks:** The better route is `S -> C -> D -> B -> T` because the paths after `C` are much cheaper overall
+- **Why greedy loses:** Starting with `B` saves only `1` unit initially, but later forces the algorithm to use the very expensive edge `B -> D = 100`. Starting with `C` costs slightly more at first but avoids that expensive path, giving a lower total route cost.
 
 ### What the Algorithm Must Explore
 
-> One bullet. Must use the word "order."
-
-- The algorithm must explore the order of visiting relics because different relic sequences can produce different total fuel costs.
+The algorithm must explore the order of visiting relics because the total fuel cost depends on the sequence in which relic chambers are visited.
 
 ---
 
@@ -125,64 +99,55 @@ Correct shortest-path distances are necessary because the route planner compares
 
 ### Part 5a: State Representation
 
-> Document the three components of your search state as a table.
-> Variable names here must match exactly what you use in torchbearer.py.
 
 | Component | Variable name in code | Data type | Description |
 |---|---|---|---|
-| Current location | | | |
-| Relics already collected | | | |
-| Fuel cost so far | | | |
+| Current location |`current_loc` | node| The node where the search is currently located. |
+| Relics already collected |`relics_visited_order` |list |Stores the relics collected so far in the order they were visited. |
+| Fuel cost so far |`cost_so_far`  | float/int| The total fuel cost accumulated along the current partial route.|
 
 ### Part 5b: Data Structure for Visited Relics
 
-> Fill in the table.
 
 | Property | Your answer |
 |---|---|
-| Data structure chosen | |
-| Operation: check if relic already collected | Time complexity: |
-| Operation: mark a relic as collected | Time complexity: |
-| Operation: unmark a relic (backtrack) | Time complexity: |
-| Why this structure fits | |
+| Data structure chosen |Set (`relics_remaining`) |
+| Operation: check if relic already collected | Time complexity:O(1) average case |
+| Operation: mark a relic as collected | Time complexity:O(1) average case using `remove()` |
+| Operation: unmark a relic (backtrack) | Time complexity: O(1) average case using `add()`|
+| Why this structure fits | A set allows fast insertion, removal, and membership checks during recursive backtracking. |
 
 ### Part 5c: Worst-Case Search Space
 
-> Two bullets.
 
-- **Worst-case number of orders considered:** _Your answer (in terms of k)._
-- **Why:** _One-line justification._
-
+- **Worst-case number of orders considered:** `k!`
+- **Why:** In the worst case, the algorithm may need to examine every possible ordering of the `k` relic chambers.
 ---
 
 ## Part 6: Pruning
 
 ### Part 6a: Best-So-Far Tracking
 
-> Three bullets.
-
-- **What is tracked:** _Your answer here._
-- **When it is used:** _Your answer here._
-- **What it allows the algorithm to skip:** _Your answer here._
+- **What is tracked:** The minimum complete route cost found so far and the relic order that produced it.
+- **When it is used:** It is checked before recursively exploring deeper branches of the search tree.
+- **What it allows the algorithm to skip:** It skips any branch whose current partial cost is already greater than or equal to the best complete solution found.
 
 ### Part 6b: Lower Bound Estimation
 
-> Three bullets.
+- **What information is available at the current state:** The current location, remaining relics, current fuel cost, exit node, and precomputed shortest-path distances.
+- **What the lower bound accounts for:** The lower bound uses `cost_so_far` as the minimum guaranteed cost already spent on the route.
 
-- **What information is available at the current state:** _Your answer here._
-- **What the lower bound accounts for:** _Your answer here._
-- **Why it never overestimates:** _Your answer here._
+- **Why it never overestimates:** Since all edge weights are nonnegative, completing the route can only increase the total cost beyond `cost_so_far`.
+
 
 ### Part 6c: Pruning Correctness
 
 > One to two bullets. Explain why pruning is safe.
 
-- _Your answer here._
+-A branch is pruned only if its lower bound is already at least the best complete route found so far.
+- Because the lower bound never overestimates the remaining route cost, pruning cannot remove the true optimal solution.
 
----
 
 ## References
 
-> Bullet list. If none beyond lecture notes, write that.
-
-- _Your references here._
+Lecture Notes Only
